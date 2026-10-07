@@ -1,0 +1,91 @@
+:root {
+  --page: #3b4a54;
+  --text: #e6ebee;
+  --light: #dee3e6;   /* ô sáng */
+  --dark: #8ca2ad;    /* ô tối */
+  --hint: rgba(40, 60, 70, 0.35);
+  --origin: #d9a441;
+  --board-size: min(92vmin, 640px);
+  --sq: calc(var(--board-size) / 8);   /* kích thước 1 ô */
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: var(--page);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+}
+
+main { display: grid; gap: 12px; }
+
+.status {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 1.1rem;
+}
+
+.status button {
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--dark);
+  color: #1f2a30;
+  font: inherit;
+  cursor: pointer;
+}
+.status button:focus-visible { outline: 3px solid var(--origin); outline-offset: 2px; }
+
+#board {
+  width: var(--board-size);
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  user-select: none;
+}
+
+.square {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.square.light { background: var(--light); }
+.square.dark  { background: var(--dark); }
+
+/* Đặt sau .light/.dark để ghi đè đúng thứ tự */
+.square.origin { box-shadow: inset 0 0 0 4px var(--origin); }
+
+.square.hint::after {
+  content: "";
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  background: var(--hint);
+}
+
+.piece {
+  width: 100%;
+  height: 100%;
+  background-image: url(resources/chess-sprite.svg);
+  background-size: 640% 320%;   /* 1280/CELL x 640/CELL, với CELL = 200 */
+  background-repeat: no-repeat;
+  cursor: grab;
+  touch-action: none;
+}
+
+.piece.dragging {
+  position: fixed;
+  z-index: 1000;
+  cursor: grabbing;
+  pointer-events: auto;
+}
+
+.piece.snapping {
+  transition: left 0.15s ease, top 0.15s ease;
+}
